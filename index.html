@@ -44,6 +44,7 @@
       padding: 14px 0;
       font-weight: bold;
       background: #ddd;
+      cursor: pointer;
     }
 
     .tab.active {
@@ -86,11 +87,6 @@
       font-size: 16px;
       font-weight: bold;
     }
-
-    button:hover {
-      background: #005fa3;
-      cursor: pointer;
-    }
   </style>
 </head>
 
@@ -99,12 +95,12 @@
 
     <div class="header">
       <h1>ESGM2 LNS Issue Tracker</h1>
-      <p>LAMI / STACKING Issue Report</p>
+      <p>부동 조치 / IP(파라미터) 변경 이력 입력</p>
     </div>
 
     <div class="tabs">
-      <div class="tab active">Issue Report</div>
-      <div class="tab">History</div>
+      <div id="tabAction" class="tab active" onclick="showForm('action')">부동 조치</div>
+      <div id="tabParam" class="tab" onclick="showForm('param')">IP(파라미터) 변경</div>
     </div>
 
     <div class="form">
@@ -112,24 +108,9 @@
       <label>1. 호기 :</label>
       <select id="line">
         <option value="">-</option>
-        <option>#1-1</option>
-        <option>#1-2</option>
-        <option>#1-3</option>
-        <option>#1-4</option>
-        <option>#1-5</option>
-        <option>#1-6</option>
-        <option>#1-7</option>
-        <option>#2-1</option>
-        <option>#2-2</option>
-        <option>#2-3</option>
-        <option>#2-4</option>
-        <option>#2-5</option>
-        <option>#2-6</option>
-        <option>#2-7</option>
-        <option>#3-1</option>
-        <option>HC1</option>
-        <option>HC2</option>
-        <option>Rework</option>
+        <option>#1-1</option><option>#1-2</option><option>#1-3</option><option>#1-4</option><option>#1-5</option><option>#1-6</option><option>#1-7</option>
+        <option>#2-1</option><option>#2-2</option><option>#2-3</option><option>#2-4</option><option>#2-5</option><option>#2-6</option><option>#2-7</option>
+        <option>#3-1</option><option>HC1</option><option>HC2</option><option>Rework</option>
       </select>
 
       <label>2. Process :</label>
@@ -150,14 +131,30 @@
       <label>5. 작성자 :</label>
       <input type="text" id="reporter" placeholder="작업자 이름">
 
-      <label>6. Issue Type :</label>
-      <input type="text" id="issueType" placeholder="예: Jam, Alignment, Wrinkle, Sensor Alarm">
+      <div id="actionForm">
+        <label>6. Issue Type :</label>
+        <input type="text" id="issueType" placeholder="예: Jam, Alignment, Wrinkle, Sensor Alarm">
 
-      <label>7. 상세내용 :</label>
-      <textarea id="description" placeholder="이슈 상세내용 입력"></textarea>
+        <label>7. 상세내용 :</label>
+        <textarea id="description" placeholder="이슈 상세내용 입력"></textarea>
 
-      <label>8. 조치내용 :</label>
-      <textarea id="action" placeholder="조치내용 입력"></textarea>
+        <label>8. 조치내용 :</label>
+        <textarea id="actionDetail" placeholder="조치내용 입력"></textarea>
+      </div>
+
+      <div id="paramForm" style="display:none;">
+        <label>6. 변경 Para/IP :</label>
+        <input type="text" id="parameterName" placeholder="변경 파라미터/IP 입력">
+
+        <label>7. 이전값 :</label>
+        <input type="text" id="beforeValue" placeholder="이전 값 입력">
+
+        <label>8. 변경값 :</label>
+        <input type="text" id="afterValue" placeholder="변경 값 입력">
+
+        <label>9. 변경사유 :</label>
+        <textarea id="changeReason" placeholder="변경 사유 입력"></textarea>
+      </div>
 
       <button onclick="submitForm()">Submit</button>
 
@@ -165,6 +162,18 @@
   </div>
 
   <script>
+    let currentForm = "action";
+
+    function showForm(type) {
+      currentForm = type;
+
+      document.getElementById("actionForm").style.display = type === "action" ? "block" : "none";
+      document.getElementById("paramForm").style.display = type === "param" ? "block" : "none";
+
+      document.getElementById("tabAction").classList.toggle("active", type === "action");
+      document.getElementById("tabParam").classList.toggle("active", type === "param");
+    }
+
     function updateMachineOptions() {
       const process = document.getElementById("process").value;
       const machine = document.getElementById("machine");
@@ -188,7 +197,7 @@
     }
 
     function submitForm() {
-      alert("아직 Excel 연결 전입니다. 화면 테스트 완료.");
+      alert(currentForm === "action" ? "부동 조치 입력 테스트 완료" : "IP(파라미터) 변경 입력 테스트 완료");
     }
   </script>
 </body>
