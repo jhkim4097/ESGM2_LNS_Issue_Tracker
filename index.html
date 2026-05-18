@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>ESGM2 LNS Issue Tracker</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -21,7 +22,6 @@
       color: white;
       text-align: center;
       padding: 35px 15px 28px;
-      border-radius: 4px 4px 0 0;
     }
 
     .header h1 {
@@ -30,7 +30,7 @@
     }
 
     .header p {
-      margin-top: 18px;
+      margin-top: 15px;
       font-size: 14px;
     }
 
@@ -41,9 +41,9 @@
     .tab {
       width: 50%;
       text-align: center;
-      padding: 14px 0;
+      padding: 15px 0;
+      background: #dcdcdc;
       font-weight: bold;
-      background: #ddd;
       cursor: pointer;
     }
 
@@ -57,12 +57,14 @@
 
     label {
       display: block;
-      font-weight: bold;
-      margin-top: 14px;
+      margin-top: 16px;
       margin-bottom: 6px;
+      font-weight: bold;
     }
 
-    select, input, textarea {
+    select,
+    input,
+    textarea {
       width: 100%;
       box-sizing: border-box;
       padding: 10px;
@@ -78,320 +80,426 @@
 
     .time-row {
       display: flex;
-      gap: 8px;
       align-items: center;
+      gap: 8px;
     }
 
     .time-row input {
       width: 48%;
     }
 
-    .time-row span {
-      font-weight: bold;
-    }
-
     button {
       width: 100%;
       margin-top: 25px;
-      padding: 13px;
-      background: #0078d4;
-      color: white;
+      padding: 14px;
       border: none;
       border-radius: 4px;
+      background: #0078d4;
+      color: white;
       font-size: 16px;
       font-weight: bold;
+      cursor: pointer;
     }
 
     button:hover {
-      background: #005fa3;
-      cursor: pointer;
+      background: #005ea6;
     }
 
     .result-box {
       display: none;
       margin-top: 25px;
       padding: 15px;
-      background: #f4f4f4;
       border: 1px solid #ccc;
+      background: #f7f7f7;
       border-radius: 4px;
-    }
-
-    .result-box h3 {
-      margin-top: 0;
     }
 
     .share-text {
       white-space: pre-wrap;
       background: white;
-      padding: 12px;
       border: 1px solid #ccc;
+      padding: 12px;
       border-radius: 4px;
+      margin-top: 10px;
       font-size: 14px;
-    }
-
-    .notice {
-      margin-top: 12px;
-      font-weight: bold;
-      color: #d00000;
-      text-align: center;
     }
 
     .copy-btn {
       background: #444;
+      margin-top: 15px;
+    }
+
+    .notice {
+      margin-top: 12px;
+      text-align: center;
+      color: red;
+      font-weight: bold;
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
 
-    <div class="header">
-      <h1>ESGM2 LNS Issue Tracker</h1>
-      <p>부동 조치 / IP(파라미터) 변경 이력 입력</p>
+<div class="container">
+
+  <div class="header">
+    <h1>ESGM2 LNS Issue Tracker</h1>
+    <p>부동 조치 / IP(파라미터) 변경 이력 입력</p>
+  </div>
+
+  <div class="tabs">
+    <div id="tabAction" class="tab active" onclick="showForm('action')">
+      부동 조치
     </div>
 
-    <div class="tabs">
-      <div id="tabAction" class="tab active" onclick="showForm('action')">부동 조치</div>
-      <div id="tabParam" class="tab" onclick="showForm('param')">IP(파라미터) 변경</div>
-    </div>
-
-    <div class="form">
-
-      <label>1. 호기 :</label>
-      <select id="line" onchange="updateProcessOptions()">
-        <option value="">-</option>
-        <option>#1-1</option><option>#1-2</option><option>#1-3</option><option>#1-4</option><option>#1-5</option><option>#1-6</option><option>#1-7</option>
-        <option>#2-1</option><option>#2-2</option><option>#2-3</option><option>#2-4</option><option>#2-5</option><option>#2-6</option><option>#2-7</option>
-        <option>#3-1</option>
-        <option>HC1</option>
-        <option>HC2</option>
-        <option>Rework</option>
-      </select>
-
-      <label>2. Process :</label>
-      <select id="process" onchange="updateMachineOptions()">
-        <option value="">-</option>
-      </select>
-
-      <label>3. Machine :</label>
-      <select id="machine">
-        <option value="">-</option>
-      </select>
-
-      <div id="actionForm">
-        <label>4. 조치 시간 :</label>
-        <div class="time-row">
-          <input type="datetime-local" id="actionStartTime">
-          <span>~</span>
-          <input type="datetime-local" id="actionEndTime">
-        </div>
-
-        <label>5. 작업자 :</label>
-        <input type="text" id="actionReporter" placeholder="작업자 이름">
-
-        <label>6. 현상 :</label>
-        <textarea id="symptom" placeholder="현상 입력"></textarea>
-
-        <label>7. 원인 :</label>
-        <textarea id="cause" placeholder="원인 입력"></textarea>
-
-        <label>8. 조치 :</label>
-        <textarea id="actionDetail" placeholder="조치 내용 입력"></textarea>
-      </div>
-
-      <div id="paramForm" style="display:none;">
-        <label>4. 변경시간 :</label>
-        <input type="datetime-local" id="paramChangeTime">
-
-        <label>5. 변경자 :</label>
-        <input type="text" id="paramReporter" placeholder="작업자 이름">
-
-        <label>6. 변경 Para :</label>
-        <input type="text" id="parameterName" placeholder="변경 파라미터 입력">
-
-        <label>7. 이전값 :</label>
-        <input type="text" id="beforeValue" placeholder="이전 값 입력">
-
-        <label>8. 변경값 :</label>
-        <input type="text" id="afterValue" placeholder="변경 값 입력">
-
-        <label>9. 변경사유 :</label>
-        <textarea id="changeReason" placeholder="변경 사유 입력"></textarea>
-      </div>
-
-      <button onclick="submitForm()">Submit</button>
-
-      <div id="resultBox" class="result-box">
-        <h3>카카오톡 공유용 문구</h3>
-        <div id="shareText" class="share-text"></div>
-        <button class="copy-btn" onclick="copyShareText()">복사하기</button>
-        <div class="notice">양산 카카오톡 방에 공유해주세요.</div>
-      </div>
-
+    <div id="tabParam" class="tab" onclick="showForm('param')">
+      IP(파라미터) 변경
     </div>
   </div>
 
-  <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbytmDXkrdMj8fTpDDwGEhVBUg93FhERN3IGgtRdC1Q3BIQIApIm2MLlfqc8Nfc7UVuBIQ/exec";
+  <div class="form">
 
-    let currentForm = "action";
+    <label>1. 호기 :</label>
+    <select id="line" onchange="updateProcessOptions()">
+      <option value="">-</option>
 
-    function showForm(type) {
-      currentForm = type;
+      <option>#1-1</option>
+      <option>#1-2</option>
+      <option>#1-3</option>
+      <option>#1-4</option>
+      <option>#1-5</option>
+      <option>#1-6</option>
+      <option>#1-7</option>
 
-      document.getElementById("actionForm").style.display = type === "action" ? "block" : "none";
-      document.getElementById("paramForm").style.display = type === "param" ? "block" : "none";
+      <option>#2-1</option>
+      <option>#2-2</option>
+      <option>#2-3</option>
+      <option>#2-4</option>
+      <option>#2-5</option>
+      <option>#2-6</option>
+      <option>#2-7</option>
 
-      document.getElementById("tabAction").classList.toggle("active", type === "action");
-      document.getElementById("tabParam").classList.toggle("active", type === "param");
+      <option>#3-1</option>
 
-      document.getElementById("resultBox").style.display = "none";
-    }
+      <option>HC1</option>
+      <option>HC2</option>
 
-    function updateProcessOptions() {
-      const line = document.getElementById("line").value;
-      const process = document.getElementById("process");
+      <option>Rework</option>
+    </select>
 
-      process.innerHTML = '<option value="">-</option>';
+    <label>2. Process :</label>
+    <select id="process" onchange="updateMachineOptions()">
+      <option value="">-</option>
+    </select>
 
-      let options = [];
+    <label>3. Machine :</label>
+    <select id="machine">
+      <option value="">-</option>
+    </select>
 
-      if (line === "HC1" || line === "HC2") {
-        options = ["LAMI"];
-      } else if (line === "Rework") {
-        options = ["STACKING"];
-      } else if (line !== "") {
-        options = ["LAMI", "STACKING"];
-      }
+    <!-- 부동 조치 -->
+    <div id="actionForm">
 
-      options.forEach(function(item) {
-        const option = document.createElement("option");
-        option.text = item;
-        option.value = item;
-        process.add(option);
-      });
+      <label>4. 조치 시간 :</label>
 
-      updateMachineOptions();
-    }
+      <div class="time-row">
+        <input type="datetime-local" id="actionStartTime">
+        <span>~</span>
+        <input type="datetime-local" id="actionEndTime">
+      </div>
 
-    function updateMachineOptions() {
-      const process = document.getElementById("process").value;
-      const machine = document.getElementById("machine");
+      <label>5. 작업자 :</label>
+      <input type="text" id="actionReporter" placeholder="작업자 이름">
 
-      machine.innerHTML = '<option value="">-</option>';
+      <label>6. 현상 :</label>
+      <textarea id="symptom"></textarea>
 
-      let options = [];
+      <label>7. 원인 :</label>
+      <textarea id="cause"></textarea>
 
-      if (process === "LAMI") {
-        options = ["Loader", "LAMI"];
-      } else if (process === "STACKING") {
-        options = ["DSTK", "Half Cell", "Taping", "Final Inspection"];
-      }
+      <label>8. 조치 :</label>
+      <textarea id="actionDetail"></textarea>
 
-      options.forEach(function(item) {
-        const option = document.createElement("option");
-        option.text = item;
-        option.value = item;
-        machine.add(option);
-      });
-    }
+    </div>
 
-    function getValue(id) {
-      return document.getElementById(id)?.value || "";
-    }
+    <!-- 파라 변경 -->
+    <div id="paramForm" style="display:none;">
 
-    function makeShareText(data) {
-      if (data.formType === "부동 조치") {
-        return `[부동 조치 공유]
+      <label>4. 변경시간 :</label>
+      <input type="datetime-local" id="paramChangeTime">
 
-호기: ${data.line}
-Process: ${data.process}
-Machine: ${data.machine}
-조치 시간: ${data.actionStartTime} ~ ${data.actionEndTime}
-작업자: ${data.actionReporter}
+      <label>5. 변경자 :</label>
+      <input type="text" id="paramReporter" placeholder="작업자 이름">
 
-현상:
+      <label>6. 변경 Para :</label>
+      <input type="text" id="parameterName">
+
+      <label>7. 이전값 :</label>
+      <input type="text" id="beforeValue">
+
+      <label>8. 변경값 :</label>
+      <input type="text" id="afterValue">
+
+      <label>9. 변경사유 :</label>
+      <textarea id="changeReason"></textarea>
+
+    </div>
+
+    <button onclick="submitForm()">Submit</button>
+
+    <div id="resultBox" class="result-box">
+
+      <h3>카카오톡 공유용 문구</h3>
+
+      <div id="shareText" class="share-text"></div>
+
+      <button class="copy-btn" onclick="copyShareText()">
+        복사하기
+      </button>
+
+      <div class="notice">
+        양산 카카오톡 방에 공유해주세요.
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+const WEB_APP_URL =
+"https://script.google.com/macros/s/AKfycbytmDXkrdMj8fTpDDwGEhVBUg93FhERN3IGgtRdC1Q3BIQIApIm2MLlfqc8Nfc7UVuBIQ/exec";
+
+let currentForm = "action";
+
+function showForm(type) {
+
+  currentForm = type;
+
+  document.getElementById("actionForm").style.display =
+    type === "action" ? "block" : "none";
+
+  document.getElementById("paramForm").style.display =
+    type === "param" ? "block" : "none";
+
+  document.getElementById("tabAction").classList.toggle(
+    "active",
+    type === "action"
+  );
+
+  document.getElementById("tabParam").classList.toggle(
+    "active",
+    type === "param"
+  );
+
+  document.getElementById("resultBox").style.display = "none";
+}
+
+function updateProcessOptions() {
+
+  const line = document.getElementById("line").value;
+  const process = document.getElementById("process");
+
+  process.innerHTML = '<option value="">-</option>';
+
+  let options = [];
+
+  if (line === "HC1" || line === "HC2") {
+
+    options = ["LAMI"];
+
+  } else if (line === "Rework") {
+
+    options = ["STACKING"];
+
+  } else if (line !== "") {
+
+    options = ["LAMI", "STACKING"];
+  }
+
+  options.forEach(function(item) {
+
+    const option = document.createElement("option");
+
+    option.text = item;
+    option.value = item;
+
+    process.add(option);
+  });
+
+  updateMachineOptions();
+}
+
+function updateMachineOptions() {
+
+  const process = document.getElementById("process").value;
+  const machine = document.getElementById("machine");
+
+  machine.innerHTML = '<option value="">-</option>';
+
+  let options = [];
+
+  if (process === "LAMI") {
+
+    options = ["Loader", "LAMI"];
+
+  } else if (process === "STACKING") {
+
+    options = [
+      "DSTK",
+      "Half Cell",
+      "Taping",
+      "Final Inspection"
+    ];
+  }
+
+  options.forEach(function(item) {
+
+    const option = document.createElement("option");
+
+    option.text = item;
+    option.value = item;
+
+    machine.add(option);
+  });
+}
+
+function getValue(id) {
+  return document.getElementById(id)?.value || "";
+}
+
+function makeShareText(data) {
+
+  if (data.formType === "부동 조치") {
+
+    return `[부동 조치 공유]
+
+1. 호기 : ${data.line}
+2. Process : ${data.process}
+3. Machine : ${data.machine}
+4. 조치 시간 :
+${data.actionStartTime}
+~
+${data.actionEndTime}
+
+5. 작업자 :
+${data.actionReporter}
+
+6. 현상 :
 ${data.symptom}
 
-원인:
+7. 원인 :
 ${data.cause}
 
-조치:
+8. 조치 :
 ${data.actionDetail}`;
-      } else {
-        return `[IP(파라미터) 변경 공유]
 
-호기: ${data.line}
-Process: ${data.process}
-Machine: ${data.machine}
-변경시간: ${data.paramChangeTime}
-변경자: ${data.paramReporter}
+  } else {
 
-변경 Para:
+    return `[IP(파라미터) 변경 공유]
+
+1. 호기 : ${data.line}
+2. Process : ${data.process}
+3. Machine : ${data.machine}
+
+4. 변경시간 :
+${data.paramChangeTime}
+
+5. 변경자 :
+${data.paramReporter}
+
+6. 변경 Para :
 ${data.parameterName}
 
-이전값:
+7. 이전값 :
 ${data.beforeValue}
 
-변경값:
+8. 변경값 :
 ${data.afterValue}
 
-변경사유:
+9. 변경사유 :
 ${data.changeReason}`;
-      }
-    }
+  }
+}
 
-    function submitForm() {
-      const data = {
-        formType: currentForm === "action" ? "부동 조치" : "IP(파라미터) 변경",
+function submitForm() {
 
-        line: getValue("line"),
-        process: getValue("process"),
-        machine: getValue("machine"),
+  const data = {
 
-        actionStartTime: getValue("actionStartTime"),
-        actionEndTime: getValue("actionEndTime"),
-        actionReporter: getValue("actionReporter"),
-        symptom: getValue("symptom"),
-        cause: getValue("cause"),
-        actionDetail: getValue("actionDetail"),
+    formType:
+      currentForm === "action"
+      ? "부동 조치"
+      : "IP(파라미터) 변경",
 
-        paramChangeTime: getValue("paramChangeTime"),
-        paramReporter: getValue("paramReporter"),
-        parameterName: getValue("parameterName"),
-        beforeValue: getValue("beforeValue"),
-        afterValue: getValue("afterValue"),
-        changeReason: getValue("changeReason")
-      };
+    line: getValue("line"),
+    process: getValue("process"),
+    machine: getValue("machine"),
 
-      fetch(WEB_APP_URL, {
-        method: "POST",
-        body: JSON.stringify(data)
-      })
-      .then(response => response.json())
-      .then(result => {
-        const shareText = makeShareText(data);
-        document.getElementById("shareText").innerText = shareText;
-        document.getElementById("resultBox").style.display = "block";
-        alert("저장 완료. 아래 문구를 복사해서 양산 카카오톡 방에 공유해주세요.");
-      })
-      .catch(error => {
-        const shareText = makeShareText(data);
-        document.getElementById("shareText").innerText = shareText;
-        document.getElementById("resultBox").style.display = "block";
-        alert("시트 저장 오류가 발생했습니다. 문구는 생성되었으니 확인해주세요.");
-        console.error(error);
-      });
-    }
+    actionStartTime: getValue("actionStartTime"),
+    actionEndTime: getValue("actionEndTime"),
+    actionReporter: getValue("actionReporter"),
+    symptom: getValue("symptom"),
+    cause: getValue("cause"),
+    actionDetail: getValue("actionDetail"),
 
-    function copyShareText() {
-      const text = document.getElementById("shareText").innerText;
-      navigator.clipboard.writeText(text).then(function() {
-        alert("복사 완료. 양산 카카오톡 방에 공유해주세요.");
-      });
-    }
+    paramChangeTime: getValue("paramChangeTime"),
+    paramReporter: getValue("paramReporter"),
+    parameterName: getValue("parameterName"),
+    beforeValue: getValue("beforeValue"),
+    afterValue: getValue("afterValue"),
+    changeReason: getValue("changeReason")
+  };
 
-    updateProcessOptions();
-  </script>
+  fetch(WEB_APP_URL, {
+    method: "POST",
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+
+    const shareText = makeShareText(data);
+
+    document.getElementById("shareText").innerText =
+      shareText;
+
+    document.getElementById("resultBox").style.display =
+      "block";
+
+    alert("저장 완료");
+  })
+  .catch(error => {
+
+    const shareText = makeShareText(data);
+
+    document.getElementById("shareText").innerText =
+      shareText;
+
+    document.getElementById("resultBox").style.display =
+      "block";
+
+    alert("시트 저장 오류 발생");
+
+    console.error(error);
+  });
+}
+
+function copyShareText() {
+
+  const text =
+    document.getElementById("shareText").innerText;
+
+  navigator.clipboard.writeText(text)
+    .then(function() {
+
+      alert("복사 완료");
+    });
+}
+
+updateProcessOptions();
+
+</script>
+
 </body>
 </html>
