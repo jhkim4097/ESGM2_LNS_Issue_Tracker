@@ -2,67 +2,194 @@
 <html>
 <head>
   <title>ESGM2 LNS Issue Tracker</title>
-
   <style>
     body {
-      font-family: Arial;
-      max-width: 500px;
-      margin: auto;
-      padding: 20px;
-      background: #f5f5f5;
+      font-family: Arial, sans-serif;
+      background: #eeeeee;
+      margin: 0;
+      padding: 0;
     }
 
-    h1 {
+    .container {
+      max-width: 560px;
+      margin: 25px auto;
+      background: white;
+    }
+
+    .header {
+      background: #444;
+      color: white;
       text-align: center;
+      padding: 35px 15px 28px;
+      border-radius: 4px 4px 0 0;
     }
 
-    input, select, textarea {
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .header p {
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    .tabs {
+      display: flex;
+    }
+
+    .tab {
+      width: 50%;
+      text-align: center;
+      padding: 14px 0;
+      font-weight: bold;
+      background: #ddd;
+    }
+
+    .tab.active {
+      background: white;
+    }
+
+    .form {
+      padding: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+
+    select, input, textarea {
       width: 100%;
+      box-sizing: border-box;
       padding: 10px;
-      margin-top: 5px;
-      margin-bottom: 15px;
-      border-radius: 5px;
       border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    textarea {
+      height: 90px;
+      resize: vertical;
     }
 
     button {
       width: 100%;
-      padding: 12px;
+      margin-top: 25px;
+      padding: 13px;
       background: #0078d4;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 4px;
       font-size: 16px;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #005fa3;
+      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
+  <div class="container">
 
-  <h1>ESGM2 LNS Issue Tracker</h1>
+    <div class="header">
+      <h1>ESGM2 LNS Issue Tracker</h1>
+      <p>LAMI / STACKING Issue Report</p>
+    </div>
 
-  <label>Line</label>
-  <select>
-    <option>STK-01</option>
-    <option>STK-02</option>
-    <option>LAMI-01</option>
-  </select>
+    <div class="tabs">
+      <div class="tab active">Issue Report</div>
+      <div class="tab">History</div>
+    </div>
 
-  <label>Issue Type</label>
-  <select>
-    <option>Jam</option>
-    <option>Misalignment</option>
-    <option>Wrinkle</option>
-    <option>Downtime</option>
-  </select>
+    <div class="form">
 
-  <label>Downtime (min)</label>
-  <input type="number">
+      <label>1. 호기 :</label>
+      <select id="line">
+        <option value="">-</option>
+        <option>#1-1</option>
+        <option>#1-2</option>
+        <option>#1-3</option>
+        <option>#1-4</option>
+        <option>#1-5</option>
+        <option>#1-6</option>
+        <option>#1-7</option>
+        <option>#2-1</option>
+        <option>#2-2</option>
+        <option>#2-3</option>
+        <option>#2-4</option>
+        <option>#2-5</option>
+        <option>#2-6</option>
+        <option>#2-7</option>
+        <option>#3-1</option>
+        <option>HC1</option>
+        <option>HC2</option>
+        <option>Rework</option>
+      </select>
 
-  <label>Description</label>
-  <textarea rows="5"></textarea>
+      <label>2. Process :</label>
+      <select id="process" onchange="updateMachineOptions()">
+        <option value="">-</option>
+        <option value="LAMI">LAMI</option>
+        <option value="STACKING">STACKING</option>
+      </select>
 
-  <button>Submit</button>
+      <label>3. Machine :</label>
+      <select id="machine">
+        <option value="">-</option>
+      </select>
 
+      <label>4. 발생시간 :</label>
+      <input type="datetime-local" id="issueTime">
+
+      <label>5. 작성자 :</label>
+      <input type="text" id="reporter" placeholder="작업자 이름">
+
+      <label>6. Issue Type :</label>
+      <input type="text" id="issueType" placeholder="예: Jam, Alignment, Wrinkle, Sensor Alarm">
+
+      <label>7. 상세내용 :</label>
+      <textarea id="description" placeholder="이슈 상세내용 입력"></textarea>
+
+      <label>8. 조치내용 :</label>
+      <textarea id="action" placeholder="조치내용 입력"></textarea>
+
+      <button onclick="submitForm()">Submit</button>
+
+    </div>
+  </div>
+
+  <script>
+    function updateMachineOptions() {
+      const process = document.getElementById("process").value;
+      const machine = document.getElementById("machine");
+
+      machine.innerHTML = '<option value="">-</option>';
+
+      let options = [];
+
+      if (process === "LAMI") {
+        options = ["Loader", "LAMI"];
+      } else if (process === "STACKING") {
+        options = ["DSTK", "Half Cell", "Taping", "Final Inspection"];
+      }
+
+      options.forEach(function(item) {
+        const option = document.createElement("option");
+        option.text = item;
+        option.value = item;
+        machine.add(option);
+      });
+    }
+
+    function submitForm() {
+      alert("아직 Excel 연결 전입니다. 화면 테스트 완료.");
+    }
+  </script>
 </body>
 </html>
