@@ -76,6 +76,20 @@
       resize: vertical;
     }
 
+    .time-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .time-row input {
+      width: 48%;
+    }
+
+    .time-row span {
+      font-weight: bold;
+    }
+
     button {
       width: 100%;
       margin-top: 25px;
@@ -106,18 +120,19 @@
     <div class="form">
 
       <label>1. 호기 :</label>
-      <select id="line">
+      <select id="line" onchange="updateProcessOptions()">
         <option value="">-</option>
         <option>#1-1</option><option>#1-2</option><option>#1-3</option><option>#1-4</option><option>#1-5</option><option>#1-6</option><option>#1-7</option>
         <option>#2-1</option><option>#2-2</option><option>#2-3</option><option>#2-4</option><option>#2-5</option><option>#2-6</option><option>#2-7</option>
-        <option>#3-1</option><option>HC1</option><option>HC2</option><option>Rework</option>
+        <option>#3-1</option>
+        <option>HC1</option>
+        <option>HC2</option>
+        <option>Rework</option>
       </select>
 
       <label>2. Process :</label>
       <select id="process" onchange="updateMachineOptions()">
         <option value="">-</option>
-        <option value="LAMI">LAMI</option>
-        <option value="STACKING">STACKING</option>
       </select>
 
       <label>3. Machine :</label>
@@ -125,26 +140,36 @@
         <option value="">-</option>
       </select>
 
-      <label>4. 발생시간 :</label>
-      <input type="datetime-local" id="issueTime">
-
-      <label>5. 작성자 :</label>
-      <input type="text" id="reporter" placeholder="작업자 이름">
-
       <div id="actionForm">
-        <label>6. Issue Type :</label>
-        <input type="text" id="issueType" placeholder="예: Jam, Alignment, Wrinkle, Sensor Alarm">
+        <label>4. 조치 시간 :</label>
+        <div class="time-row">
+          <input type="datetime-local" id="actionStartTime">
+          <span>~</span>
+          <input type="datetime-local" id="actionEndTime">
+        </div>
 
-        <label>7. 상세내용 :</label>
-        <textarea id="description" placeholder="이슈 상세내용 입력"></textarea>
+        <label>5. 작업자 :</label>
+        <input type="text" id="actionReporter" placeholder="작업자 이름">
 
-        <label>8. 조치내용 :</label>
-        <textarea id="actionDetail" placeholder="조치내용 입력"></textarea>
+        <label>6. 현상 :</label>
+        <textarea id="symptom" placeholder="현상 입력"></textarea>
+
+        <label>7. 원인 :</label>
+        <textarea id="cause" placeholder="원인 입력"></textarea>
+
+        <label>8. 조치 :</label>
+        <textarea id="actionDetail" placeholder="조치 내용 입력"></textarea>
       </div>
 
       <div id="paramForm" style="display:none;">
-        <label>6. 변경 Para/IP :</label>
-        <input type="text" id="parameterName" placeholder="변경 파라미터/IP 입력">
+        <label>4. 변경시간 :</label>
+        <input type="datetime-local" id="paramChangeTime">
+
+        <label>5. 변경자 :</label>
+        <input type="text" id="paramReporter" placeholder="작업자 이름">
+
+        <label>6. 변경 Para :</label>
+        <input type="text" id="parameterName" placeholder="변경 파라미터 입력">
 
         <label>7. 이전값 :</label>
         <input type="text" id="beforeValue" placeholder="이전 값 입력">
@@ -174,6 +199,32 @@
       document.getElementById("tabParam").classList.toggle("active", type === "param");
     }
 
+    function updateProcessOptions() {
+      const line = document.getElementById("line").value;
+      const process = document.getElementById("process");
+
+      process.innerHTML = '<option value="">-</option>';
+
+      let options = [];
+
+      if (line === "HC1" || line === "HC2") {
+        options = ["LAMI"];
+      } else if (line === "Rework") {
+        options = ["STACKING"];
+      } else if (line !== "") {
+        options = ["LAMI", "STACKING"];
+      }
+
+      options.forEach(function(item) {
+        const option = document.createElement("option");
+        option.text = item;
+        option.value = item;
+        process.add(option);
+      });
+
+      updateMachineOptions();
+    }
+
     function updateMachineOptions() {
       const process = document.getElementById("process").value;
       const machine = document.getElementById("machine");
@@ -199,6 +250,8 @@
     function submitForm() {
       alert(currentForm === "action" ? "부동 조치 입력 테스트 완료" : "IP(파라미터) 변경 입력 테스트 완료");
     }
+
+    updateProcessOptions();
   </script>
 </body>
 </html>
