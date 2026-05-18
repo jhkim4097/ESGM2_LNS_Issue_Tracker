@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ESGM2 LNS Issue Tracker</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0078d4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>ESGM2 LNS Issue Tracker</h1>
+
+  <label>Line</label>
+  <select>
+    <option>STK-01</option>
+    <option>STK-02</option>
+    <option>LAMI-01</option>
+  </select>
+
+  <label>Issue Type</label>
+  <select>
+    <option>Jam</option>
+    <option>Misalignment</option>
+    <option>Wrinkle</option>
+    <option>Downtime</option>
+  </select>
+
+  <label>Downtime (min)</label>
+  <input type="number">
+
+  <label>Description</label>
+  <textarea rows="5"></textarea>
+
+  <button>Submit</button>
+
+</body>
+</html>
