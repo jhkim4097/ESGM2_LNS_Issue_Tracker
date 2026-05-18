@@ -101,6 +101,44 @@
       font-size: 16px;
       font-weight: bold;
     }
+
+    button:hover {
+      background: #005fa3;
+      cursor: pointer;
+    }
+
+    .result-box {
+      display: none;
+      margin-top: 25px;
+      padding: 15px;
+      background: #f4f4f4;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .result-box h3 {
+      margin-top: 0;
+    }
+
+    .share-text {
+      white-space: pre-wrap;
+      background: white;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .notice {
+      margin-top: 12px;
+      font-weight: bold;
+      color: #d00000;
+      text-align: center;
+    }
+
+    .copy-btn {
+      background: #444;
+    }
   </style>
 </head>
 
@@ -183,10 +221,19 @@
 
       <button onclick="submitForm()">Submit</button>
 
+      <div id="resultBox" class="result-box">
+        <h3>카카오톡 공유용 문구</h3>
+        <div id="shareText" class="share-text"></div>
+        <button class="copy-btn" onclick="copyShareText()">복사하기</button>
+        <div class="notice">양산 카카오톡 방에 공유해주세요.</div>
+      </div>
+
     </div>
   </div>
 
   <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbytmDXkrdMj8fTpDDwGEhVBUg93FhERN3IGgtRdC1Q3BIQIApIm2MLlfqc8Nfc7UVuBIQ/exec";
+
     let currentForm = "action";
 
     function showForm(type) {
@@ -197,6 +244,8 @@
 
       document.getElementById("tabAction").classList.toggle("active", type === "action");
       document.getElementById("tabParam").classList.toggle("active", type === "param");
+
+      document.getElementById("resultBox").style.display = "none";
     }
 
     function updateProcessOptions() {
@@ -247,8 +296,99 @@
       });
     }
 
+    function getValue(id) {
+      return document.getElementById(id)?.value || "";
+    }
+
+    function makeShareText(data) {
+      if (data.formType === "부동 조치") {
+        return `[부동 조치 공유]
+
+호기: ${data.line}
+Process: ${data.process}
+Machine: ${data.machine}
+조치 시간: ${data.actionStartTime} ~ ${data.actionEndTime}
+작업자: ${data.actionReporter}
+
+현상:
+${data.symptom}
+
+원인:
+${data.cause}
+
+조치:
+${data.actionDetail}`;
+      } else {
+        return `[IP(파라미터) 변경 공유]
+
+호기: ${data.line}
+Process: ${data.process}
+Machine: ${data.machine}
+변경시간: ${data.paramChangeTime}
+변경자: ${data.paramReporter}
+
+변경 Para:
+${data.parameterName}
+
+이전값:
+${data.beforeValue}
+
+변경값:
+${data.afterValue}
+
+변경사유:
+${data.changeReason}`;
+      }
+    }
+
     function submitForm() {
-      alert(currentForm === "action" ? "부동 조치 입력 테스트 완료" : "IP(파라미터) 변경 입력 테스트 완료");
+      const data = {
+        formType: currentForm === "action" ? "부동 조치" : "IP(파라미터) 변경",
+
+        line: getValue("line"),
+        process: getValue("process"),
+        machine: getValue("machine"),
+
+        actionStartTime: getValue("actionStartTime"),
+        actionEndTime: getValue("actionEndTime"),
+        actionReporter: getValue("actionReporter"),
+        symptom: getValue("symptom"),
+        cause: getValue("cause"),
+        actionDetail: getValue("actionDetail"),
+
+        paramChangeTime: getValue("paramChangeTime"),
+        paramReporter: getValue("paramReporter"),
+        parameterName: getValue("parameterName"),
+        beforeValue: getValue("beforeValue"),
+        afterValue: getValue("afterValue"),
+        changeReason: getValue("changeReason")
+      };
+
+      fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(result => {
+        const shareText = makeShareText(data);
+        document.getElementById("shareText").innerText = shareText;
+        document.getElementById("resultBox").style.display = "block";
+        alert("저장 완료. 아래 문구를 복사해서 양산 카카오톡 방에 공유해주세요.");
+      })
+      .catch(error => {
+        const shareText = makeShareText(data);
+        document.getElementById("shareText").innerText = shareText;
+        document.getElementById("resultBox").style.display = "block";
+        alert("시트 저장 오류가 발생했습니다. 문구는 생성되었으니 확인해주세요.");
+        console.error(error);
+      });
+    }
+
+    function copyShareText() {
+      const text = document.getElementById("shareText").innerText;
+      navigator.clipboard.writeText(text).then(function() {
+        alert("복사 완료. 양산 카카오톡 방에 공유해주세요.");
+      });
     }
 
     updateProcessOptions();
